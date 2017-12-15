@@ -45,28 +45,18 @@ def writeDB(body):
 	    dbname = data[25].replace('\n', '')
 	    # dbuser = data[28].replace('\n', '')
 	    # dbuser_password = data[31].replace('\n', '')
-	    query = 'SELECT * FROM "temperature"'
-	    json_body = json.loads(body)
+	    data_json = json.loads(body)
+
+	    table = json.dumps(data_json["schema"])
+
+	    query = "SELECT * FROM " + table
+
+	    json_body = [{u'measurement': data_json["schema"], u'fields': {u'state': data_json["state"]}, u'tags': {u'zone': data_json["zone"], u'name': data_json["name"]}}]
 
 	    client = InfluxDBClient(host, port, user, password, dbname)
 
-	    # print("Drop user: " + dbuser)
-	    # client.drop_user(dbuser)
-
-	    # print("Drop database: " + dbname)
-	    # client.drop_database(dbname)
-
 	    # print("Create database: " + dbname)
 	    client.create_database(dbname)
-
-	    # print("Create a retention policy")
-		# client.create_retention_policy('awesome_policy', '3d', 3, default=True)
-
-	    # print("Create user: " + dbuser)
-	    # client.create_user(dbuser, dbuser_password)
-
-	    # print("Switch user: " + dbuser)
-	    # client.switch_user(dbuser, dbuser_password)
 
 	    # print("Write points: {0}".format(json_body))
 	    client.write_points(json_body)
@@ -75,12 +65,6 @@ def writeDB(body):
 	    result = client.query(query)
 
 	    print("Result: {0}".format(result))
-
-	    # print("Switch user: " + user)
-	    # client.switch_user(user, password)
-
-	    # print("Drop database: " + dbname)
-	    # client.drop_database(dbname)
 
 
 	def parse_args():

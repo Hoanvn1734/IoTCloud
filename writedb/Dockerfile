@@ -8,9 +8,9 @@ RUN mkdir /writeDB
 
 RUN mkdir /configwdb
 
-ADD ./writeDB.py /writeDB
+ADD writeDB.py /writeDB
 
-ADD ./configure.cfg /configwdb
+ADD configure.cfg /configwdb
 
 WORKDIR /writeDB
 
